@@ -1,2 +1,2 @@
 # SOCHIABib
-Biblioteca de enlaces Antropología Biológica Chile 
+Biblioteca de enlaces publicaciones Antropología Biológica en Chile
