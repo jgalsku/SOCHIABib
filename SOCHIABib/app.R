@@ -25,15 +25,15 @@ ui <- fluidPage(
             
             sliderInput(inputId = "yearInput", label = "Año de publicación", min = 1950, max = 2030, value = c(1980, 2021), dragRange = TRUE, sep=""),
             
-            pickerInput(inputId = "metInput", label = "Área metodológica", multiple = TRUE, choices = met_vector, options = list(`actions-box` = TRUE)),
+            pickerInput(inputId = "metInput", label = "Área metodológica", multiple = TRUE, choices = met_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             
-            pickerInput(inputId = "geoInput", label = "Región natural Chile", multiple = TRUE, choices = geo_vector, options = list(`actions-box` = TRUE)),
+            pickerInput(inputId = "geoInput", label = "Región natural Chile", multiple = TRUE, choices = geo_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             
-            pickerInput(inputId = "autorInput", label = "Nombre autores", multiple = TRUE, choices = autores_vector, options = list(`actions-box` = TRUE, `live-search`=TRUE)),
+            pickerInput(inputId = "autorInput", label = "Nombre autores", multiple = TRUE, choices = autores_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
             
-            pickerInput(inputId = "keywordInput", label = "Palabras clave", multiple = TRUE, choices = key_vector, options = list(`actions-box` = TRUE, `live-search`=TRUE)),
+            pickerInput(inputId = "keywordInput", label = "Palabras clave", multiple = TRUE, choices = key_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
             
-            pickerInput(inputId = "pubTypeInput", label = "Tipo de Publicación", multiple = TRUE, choices = pub_type_vector, options = list(`actions-box` = TRUE)),
+            pickerInput(inputId = "pubTypeInput", label = "Tipo de Publicación", multiple = TRUE, choices = pub_type_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             
             
             
@@ -274,7 +274,7 @@ server <- function(input, output, session) {
     },
     
     escape = FALSE,
-    colnames=c("Autor/a/es", "Año publicación", "Título", "Fuente", "Link", "pub_type", 
+    colnames=c("Autor/a/es", "Año publicación", "Título", "Fuente", "Enlace", "pub_type", 
                "DOI", "Pages", "Issue", "Volume", "Conference.Name", "Publisher", 
                "Editor", "Place", "geo", "met", "key"),
     options = list(
