@@ -1,0 +1,12 @@
+name: SOCHIABib
+title: SOCHIABib
+username:
+account: jgalsku
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3882851
+bundleId: 4412244
+url: https://jgalsku.shinyapps.io/SOCHIABib/
+when: 1617118378.26929
+asMultiple: FALSE
+asStatic: FALSE

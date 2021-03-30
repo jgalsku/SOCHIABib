@@ -1,0 +1,96 @@
+
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+setwd("C:/Users/yo/Dropbox/sochiab/biblio")
+
+
+biblio <- read.csv("C:/Users/yo/Dropbox/sochiab/biblio/Bioantro_Chile.csv", encoding = "UTF-8", na.strings=c("","NA"))
+
+#separate column Extra into geo and met
+biblio <- separate(data = biblio, col = "Extra", into = c("geo", "met"), ";")
+
+
+dput(names(biblio))
+
+
+biblio <- biblio %>% 
+  rename(
+    pub_type = Item.Type, 
+    pub_year = Publication.Year,
+    pub_title = Title,
+    pub_venue = Publication.Title,
+    autor = Author,
+    key = Manual.Tags
+    
+  )
+
+dput(names(biblio))
+
+
+
+myvars <- c("autor", "pub_year", "pub_title", "pub_venue",  
+            "Url", "pub_type", "DOI", "Pages", "Issue", 
+            "Volume", "Conference.Name", "Publisher", "Editor", 
+            "Place", "geo", "met", "key"
+)
+biblio <- biblio[myvars]
+
+
+dput(names(biblio))
+
+
+#add hyperlink to url
+
+
+biblio$Url <- ifelse(is.na(biblio$Url), NA, paste0("<a href='",biblio$Url,"' target='_blank'>URL</a>"))
+
+
+# biblio$Url <- paste0("<a href='",biblio$Url,"' target='_blank'>URL</a>")
+
+#make title bold
+biblio$pub_title <- paste0("<b>",biblio$pub_title,"</b>")
+
+#coalesce pub_venue con publisher priorizanto pub_venue, para agregar info de memorias
+biblio$pub_venue <- dplyr::coalesce(biblio$pub_venue, biblio$Publisher)
+
+#rename pub_type
+dput(levels(as.factor(biblio$pub_type)))
+# biblio <- 
+#   biblio %>% 
+#   mutate_at("pub_type", str_replace, "bookSection", "Capítulo")
+
+
+biblio <- 
+  biblio %>% 
+  mutate_at("pub_type", str_replace, "conferencePaper", "Presentación")
+
+biblio <- 
+  biblio %>% 
+  mutate_at("pub_type", str_replace, "journalArticle", "Artículo")
+
+biblio <- 
+  biblio %>% 
+  mutate_at("pub_type", str_replace, "manuscript", "Manuscrito")
+
+biblio <- 
+  biblio %>% 
+  mutate_at("pub_type", str_replace, "thesis", "Tesis")
+
+
+
+
+
+
+setwd("C:/Users/yo/Dropbox/shiny/SOCHIABib/SOCHIABib")
+
+save(biblio, file = "biblio.Rdata")
+
+
+
+
+
+
+
+
