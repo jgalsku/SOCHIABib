@@ -6,6 +6,8 @@ library(DT)
 library(shinyjs)
 
 load("biblio.Rdata")
+
+#original vectors
 autores_vector <- sort(unique(trimws(unlist(strsplit(biblio$autor, split=";")), which="left")))
 key_vector <- sort(unique(unlist(strsplit(biblio$key, split=";"))))
 geo_vector <- sort(unique(unlist(strsplit(biblio$geo, split=","))))
@@ -215,8 +217,6 @@ server <- function(input, output, session) {
         # put_type
         updatePickerInput(session = session, inputId = "pubTypeInput",
                           choices = sort(unique(unlist(biblio$pub_type))), selected = input$pubTypeInput)
-        
-        
     })
     
     
@@ -245,14 +245,10 @@ server <- function(input, output, session) {
         updatePickerInput(session = session, inputId = "keywordInput",
                           choices = sort(unique(unlist(strsplit(biblio$key, split=";")))), selected = input$keyInput)
         
-        
-        
     })
     
     
-    
-    
-    
+
     
     dataInput <- eventReactive(input$buscarInput,{
         
@@ -263,9 +259,6 @@ server <- function(input, output, session) {
             filter(grepl(paste(input$autorInput, collapse = "|"), autor)) %>%
             filter(grepl(paste(input$keywordInput, collapse = "|"), key)) %>%
             filter(grepl(paste(input$pubTypeInput, collapse = "|"), pub_type))
-        
-        
-        
     })
     
     
@@ -300,12 +293,7 @@ server <- function(input, output, session) {
         }
     )
     
-    
-    
 }
-
-
-
 
 
 
