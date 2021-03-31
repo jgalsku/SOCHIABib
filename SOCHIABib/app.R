@@ -14,7 +14,8 @@ geo_vector <- sort(unique(unlist(strsplit(biblio$geo, split=","))))
 met_vector <- sort(unique(unlist(strsplit(biblio$met, split=","))))
 pub_type_vector <- sort(unique(unlist(biblio$pub_type)))
 
-
+min_year <- round(min(biblio$pub_year),0)
+max_year <- round(max(biblio$pub_year),0)
 
 
 ui <- fluidPage(
@@ -23,7 +24,7 @@ ui <- fluidPage(
             
             titlePanel("Biblioteca de enlaces publicaciones Antropología Biológica en Chile"),
             
-            sliderInput(inputId = "yearInput", label = "Año de publicación", min = 1950, max = 2030, value = c(1980, 2021), dragRange = TRUE, sep=""),
+            sliderInput(inputId = "yearInput", label = "Año de publicación", min = min_year, max = max_year, value = c(min_year, max_year), dragRange = TRUE, sep=""),
             
             pickerInput(inputId = "metInput", label = "Área metodológica", multiple = TRUE, choices = met_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             
