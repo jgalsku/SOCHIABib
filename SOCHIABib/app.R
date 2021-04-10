@@ -44,9 +44,19 @@ ui <- fluidPage(
             
             actionButton("refresh", "Limpiar búsqueda"),
             
+            downloadButton("download", "Descargar resultados"),
+
             hr(),
+            div(span("Descarga la "),
+                a("biblioteca completa", href = "Bioantro_Chile.bib"), " para tu manejador de referencias."),
             
-            downloadButton("download", "Descargar tabla resultados")
+            div(span("Agrega referencias "),
+                a("aquí.", href = "https://docs.google.com/forms/d/e/1FAIpQLScsZ3ei2v5MBBiK4sDKrNanHmzKyxPev4FyZ26VhXJmwUZX8A/viewform?vc=0&c=0&w=1&flr=0&gxids=7628", target="_blank"), 
+                span("Creado por "),
+                a("jgalsku.", href = "https://github.com/jgalsku/SOCHIABib", target="_blank")),
+            
+
+            
         ),
         
         
@@ -275,7 +285,7 @@ server <- function(input, output, session) {
     },
     
     escape = FALSE,
-    colnames=c("Autor/a/es", "Año publicación", "Título", "Fuente", "Enlace", "pub_type", 
+    colnames=c("Autor/a/es", "Año publicación", "Título", "Publicación", "Enlace", "pub_type", 
                "DOI", "Pages", "Issue", "Volume", "Conference.Name", "Publisher", 
                "Editor", "Place", "geo", "met", "key"),
     options = list(
@@ -293,6 +303,21 @@ server <- function(input, output, session) {
             write.csv(dataInput(), con)
         }
     )
+    
+
+    # output$download2 <- downloadHandler(
+    #     filename <- function() {
+    #         "SOCHIABib.bib"
+    #     },
+    #     
+    #     content <- function(file) {
+    #         file.copy("Bioantro_Chile.bib", file)
+    #     }    
+    #     )
+    
+    
+    
+    
     
 }
 
