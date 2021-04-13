@@ -9,7 +9,7 @@ load("biblio.Rdata")
 
 #original vectors
 autores_vector <- sort(unique(trimws(unlist(strsplit(biblio$autor, split=";")), which="left")))
-key_vector <- sort(unique(unlist(strsplit(biblio$key, split=";"))))
+key_vector <- sort(unique(trimws(unlist(strsplit(biblio$key, split=";")))))
 geo_vector <- sort(unique(unlist(strsplit(biblio$geo, split=","))))
 met_vector <- sort(unique(unlist(strsplit(biblio$met, split=","))))
 pub_type_vector <- sort(unique(unlist(biblio$pub_type)))
@@ -96,7 +96,7 @@ server <- function(input, output, session) {
                           choices = sort(unique(trimws(unlist(strsplit(biblio$autor, split=";")), which="left"))))
         # key
         updatePickerInput(session = session, inputId = "keywordInput",
-                          choices = sort(unique(unlist(strsplit(biblio$key, split=";")))))
+                          choices = sort(unique(trimws(unlist(strsplit(biblio$key, split=";"))))))
         # put_type
         updatePickerInput(session = session, inputId = "pubTypeInput",
                           choices = sort(unique(unlist(biblio$pub_type))))
@@ -127,7 +127,7 @@ server <- function(input, output, session) {
                           choices = sort(unique(trimws(unlist(strsplit(biblio$autor, split=";")), which="left"))), selected = input$autorInput)
         # key
         updatePickerInput(session = session, inputId = "keywordInput",
-                          choices = sort(unique(unlist(strsplit(biblio$key, split=";")))), selected = input$keyInput)
+                          choices = sort(unique(trimws(unlist(strsplit(biblio$key, split=";"))))), selected = input$keyInput)
         # put_type
         updatePickerInput(session = session, inputId = "pubTypeInput",
                           choices = sort(unique(unlist(biblio$pub_type))), selected = input$pubTypeInput)
@@ -161,7 +161,7 @@ server <- function(input, output, session) {
                           choices = sort(unique(trimws(unlist(strsplit(biblio$autor, split=";")), which="left"))), selected = input$autorInput)
         # key
         updatePickerInput(session = session, inputId = "keywordInput",
-                          choices = sort(unique(unlist(strsplit(biblio$key, split=";")))), selected = input$keyInput)
+                          choices = sort(unique(trimws(unlist(strsplit(biblio$key, split=";"))))), selected = input$keyInput)
         # put_type
         updatePickerInput(session = session, inputId = "pubTypeInput",
                           choices = sort(unique(unlist(biblio$pub_type))), selected = input$pubTypeInput)
@@ -191,7 +191,7 @@ server <- function(input, output, session) {
                           choices = sort(unique(unlist(strsplit(biblio$geo, split=",")))), selected = input$geoInput)
         # key
         updatePickerInput(session = session, inputId = "keywordInput",
-                          choices = sort(unique(unlist(strsplit(biblio$key, split=";")))), selected = input$keyInput)
+                          choices = sort(unique(trimws(unlist(strsplit(biblio$key, split=";"))))), selected = input$keyInput)
         # put_type
         updatePickerInput(session = session, inputId = "pubTypeInput",
                           choices = sort(unique(unlist(biblio$pub_type))), selected = input$pubTypeInput)
@@ -254,7 +254,7 @@ server <- function(input, output, session) {
                           choices = sort(unique(trimws(unlist(strsplit(biblio$autor, split=";")), which="left"))), selected = input$autorInput)
         # key
         updatePickerInput(session = session, inputId = "keywordInput",
-                          choices = sort(unique(unlist(strsplit(biblio$key, split=";")))), selected = input$keyInput)
+                          choices = sort(unique(trimws(unlist(strsplit(biblio$key, split=";"))))), selected = input$keyInput)
         
     })
     
@@ -300,7 +300,7 @@ server <- function(input, output, session) {
             "SOCHIABib.csv"
         },
         content = function(con) {
-            write.csv(dataInput(), con)
+            write.csv(dataInput(), con, fileEncoding = "latin1")
         }
     )
     
