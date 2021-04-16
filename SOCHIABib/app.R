@@ -18,49 +18,56 @@ min_year <- round(min(biblio$pub_year),0)
 max_year <- round(max(biblio$pub_year),0)
 
 
+
+
+
 ui <- fluidPage(
     sidebarLayout(
-        sidebarPanel(
-            
-            titlePanel("Biblioteca de enlaces publicaciones Antropología Biológica en Chile"),
-            
+        sidebarPanel(tags$h1(strong("SOCHIABib")),
+                     
+                     tags$h3("Biblioteca de enlaces publicaciones Antropología Biológica de Chile"),
+
+                     tags$br(),
+                     
             sliderInput(inputId = "yearInput", label = "Año de publicación", min = min_year, max = max_year, value = c(min_year, max_year), dragRange = TRUE, sep=""),
-            
+
             pickerInput(inputId = "metInput", label = "Área metodológica", multiple = TRUE, choices = met_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
-            
+
             pickerInput(inputId = "geoInput", label = "Región natural Chile", multiple = TRUE, choices = geo_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
-            
+
             pickerInput(inputId = "autorInput", label = "Nombre autores", multiple = TRUE, choices = autores_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
-            
+
             pickerInput(inputId = "keywordInput", label = "Palabras clave", multiple = TRUE, choices = key_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
-            
+
             pickerInput(inputId = "pubTypeInput", label = "Tipo de Publicación", multiple = TRUE, choices = pub_type_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
-            
-            
-            
-            br(), 
-            
+
+
+
+            tags$br(),
+
             actionButton(inputId = "buscarInput", label = "Buscar"),
-            
+
             actionButton("refresh", "Limpiar búsqueda"),
-            
+
             downloadButton("download", "Descargar resultados"),
 
-            hr(),
+            tags$hr(),
             div(span("Descarga la "),
                 a("biblioteca completa", href = "Bioantro_Chile.bib"), " para tu manejador de referencias."),
-            
+
             div(span("Agrega referencias "),
-                a("aquí.", href = "https://docs.google.com/forms/d/e/1FAIpQLScsZ3ei2v5MBBiK4sDKrNanHmzKyxPev4FyZ26VhXJmwUZX8A/viewform?vc=0&c=0&w=1&flr=0&gxids=7628", target="_blank"), 
+                a("aquí.", href = "https://docs.google.com/forms/d/e/1FAIpQLSdhplY5vG5KClkDnyWZpOZfVfAEWJs4V1pHquGryzLbsXgPag/viewform?usp=sf_link", target="_blank"),
                 span("Creado por "),
                 a("jgalsku.", href = "https://github.com/jgalsku/SOCHIABib", target="_blank")),
-            
 
-            
+
+
         ),
-        
-        
+
+
         mainPanel(
+            
+            setBackgroundImage(src = 'logo1.png', shinydashboard = FALSE),
             DT::dataTableOutput(outputId = "tableOutput")
         )
     )
@@ -300,20 +307,19 @@ server <- function(input, output, session) {
             "SOCHIABib.csv"
         },
         content = function(con) {
-            write.csv(dataInput(), con, fileEncoding = "latin1")
+            
+            biblio <- dataInput()
+            
+            #remove html tags
+            biblio$Url <- gsub("<a href='", "", biblio$Url)
+            biblio$Url <- gsub("' target='_blank'>URL</a>", "", biblio$Url)
+            biblio$pub_title <- gsub("<b>", "", biblio$pub_title)
+            biblio$pub_title <- gsub("</b>", "", biblio$pub_title)
+            
+            
+            write.csv(biblio, con, fileEncoding = "latin1")
         }
     )
-    
-
-    # output$download2 <- downloadHandler(
-    #     filename <- function() {
-    #         "SOCHIABib.bib"
-    #     },
-    #     
-    #     content <- function(file) {
-    #         file.copy("Bioantro_Chile.bib", file)
-    #     }    
-    #     )
     
     
     
