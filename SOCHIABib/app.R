@@ -67,7 +67,7 @@ ui <- fluidPage(
 
         mainPanel(
             
-            setBackgroundImage(src = 'logo1.png', shinydashboard = FALSE),
+            setBackgroundImage(src = 'logo2.png', shinydashboard = FALSE),
             DT::dataTableOutput(outputId = "tableOutput")
         )
     )

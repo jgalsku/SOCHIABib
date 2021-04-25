@@ -3,10 +3,10 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 
-setwd("C:/Users/yo/Dropbox/sochiab/biblio")
+setwd("C:/Users/yo/Dropbox/shiny/SOCHIABib")
 
 
-biblio <- read.csv("C:/Users/yo/Dropbox/sochiab/biblio/Bioantro_Chile.csv", encoding = "UTF-8", na.strings=c("","NA"))
+biblio <- read.csv("./Bioantro_Chile.csv", encoding = "UTF-8", na.strings=c("","NA"))
 
 #separate column Extra into geo and met
 biblio <- separate(data = biblio, col = "Extra", into = c("geo", "met"), ";")
