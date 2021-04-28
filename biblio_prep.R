@@ -16,7 +16,7 @@ dput(names(biblio))
 
 #merge info from automatic tags and manual tags (zotero categories)
 biblio$key <- ifelse(is.na(biblio$Automatic.Tags), paste(biblio$Manual.Tags),paste(biblio$Manual.Tags,biblio$Automatic.Tags))
-biblio$key
+
 
 #rename variables
 biblio <- biblio %>% 
@@ -26,7 +26,8 @@ biblio <- biblio %>%
     pub_title = Title,
     pub_venue = Publication.Title,
     autor = Author,
-    conferencia = Conference.Name
+    conferencia = Conference.Name,
+    abstract = Abstract.Note
     
   )
 
@@ -38,7 +39,7 @@ dput(names(biblio))
 myvars <- c("autor", "pub_year", "pub_title", "pub_venue",  
             "Url", "pub_type", "DOI", "Pages", "Issue", 
             "Volume", "conferencia", "Publisher", "Editor", 
-            "Place", "geo", "met", "key"
+            "Place", "geo", "met", "key", "abstract"
 )
 biblio <- biblio[myvars]
 
@@ -72,9 +73,6 @@ biblio <-
 #eliminate blank space left author list & order alphabetic
 biblio$autor <- trimws(biblio$autor, which= c("left"))
 biblio <- biblio[order(biblio$autor),]
-
-
-biblio$key 
 
 
 

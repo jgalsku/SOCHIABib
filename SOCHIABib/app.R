@@ -17,18 +17,24 @@ pub_type_vector <- sort(unique(unlist(biblio$pub_type)))
 min_year <- round(min(biblio$pub_year),0)
 max_year <- round(max(biblio$pub_year),0)
 
-
+radio_vector <- c("Solo Chile", "Sí, de socies SOCHIAB")
 
 
 
 ui <- fluidPage(
     sidebarLayout(
-        sidebarPanel(tags$h1(strong("SOCHIABib")),
+        sidebarPanel(
+            
+            tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap_custom.css")),
+            
+            tags$h1(strong("SOCHIABib")),
                      
-                     tags$h3("Biblioteca de enlaces publicaciones Antropología Biológica de Chile"),
+            tags$h4("Biblioteca de enlaces publicaciones Antropología Biológica de Chile"),
 
-                     tags$br(),
-                     
+            tags$br(),
+            
+            radioButtons(inputId = "radioInput", label = "¿Incluir publicaciones ajenas a Chile?     ", choices = radio_vector, selected = "Solo Chile", inline = TRUE),
+                
             sliderInput(inputId = "yearInput", label = "Año de publicación", min = min_year, max = max_year, value = c(min_year, max_year), dragRange = TRUE, sep=""),
 
             pickerInput(inputId = "metInput", label = "Área metodológica", multiple = TRUE, choices = met_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
@@ -40,10 +46,9 @@ ui <- fluidPage(
             pickerInput(inputId = "keywordInput", label = "Palabras clave", multiple = TRUE, choices = key_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
 
             pickerInput(inputId = "pubTypeInput", label = "Tipo de Publicación", multiple = TRUE, choices = pub_type_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
+            
 
-
-
-            tags$br(),
+           
 
             actionButton(inputId = "buscarInput", label = "Buscar"),
 
@@ -58,7 +63,9 @@ ui <- fluidPage(
             div(span("Agrega referencias "),
                 a("aquí.", href = "https://docs.google.com/forms/d/e/1FAIpQLSdhplY5vG5KClkDnyWZpOZfVfAEWJs4V1pHquGryzLbsXgPag/viewform?usp=sf_link", target="_blank"),
                 span("Creado por "),
-                a("jgalsku.", href = "https://github.com/jgalsku/SOCHIABib", target="_blank")),
+                a("jgalsku ", href = "https://github.com/jgalsku/SOCHIABib", target="_blank"),
+                span("para "),
+                a("SOCHIAB.", href = "http://www.sochiab.cl", target="_blank")),
 
 
 
@@ -67,7 +74,7 @@ ui <- fluidPage(
 
         mainPanel(
             
-            setBackgroundImage(src = 'logo2.png', shinydashboard = FALSE),
+            setBackgroundImage(src = 'logo4.png', shinydashboard = FALSE),
             DT::dataTableOutput(outputId = "tableOutput")
         )
     )
@@ -79,9 +86,16 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
     
+
+    observeEvent(input$radioInput, {
+        
+        if(input$radioInput == "Solo Chile") {
+            
+            biblio <- biblio %>%
+                filter(geo != "Fuera de Chile")
+        }
+        
     ### all observant on year
-    
-    
     
     ##dep on year
     
@@ -266,9 +280,19 @@ server <- function(input, output, session) {
     })
     
     
-
+})
+    
+    
     
     dataInput <- eventReactive(input$buscarInput,{
+        
+        
+        if(input$radioInput == "Solo Chile") {
+            
+            biblio <- biblio %>%
+                filter(geo != "Fuera de Chile")
+        }
+
         
         data <- biblio %>% 
             filter(pub_year >= input$yearInput[1] & pub_year <= input$yearInput[2]) %>%
@@ -294,10 +318,10 @@ server <- function(input, output, session) {
     escape = FALSE,
     colnames=c("Autor/a/es", "Año publicación", "Título", "Publicación", "Enlace", "pub_type", 
                "DOI", "Pages", "Issue", "Volume", "Conference.Name", "Publisher", 
-               "Editor", "Place", "geo", "met", "key"),
+               "Editor", "Place", "geo", "met", "key", "abstract"),
     options = list(
         autoWidth = FALSE,
-        columnDefs = list(list(targets = c(6:17),visible=FALSE))
+        columnDefs = list(list(targets = c(6:18),visible=FALSE))
     ))
     
     
@@ -315,7 +339,8 @@ server <- function(input, output, session) {
             biblio$Url <- gsub("' target='_blank'>URL</a>", "", biblio$Url)
             biblio$pub_title <- gsub("<b>", "", biblio$pub_title)
             biblio$pub_title <- gsub("</b>", "", biblio$pub_title)
-            
+            biblio <- biblio %>% select(!abstract)
+
             
             write.csv(biblio, con, fileEncoding = "latin1")
         }
