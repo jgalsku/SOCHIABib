@@ -1,4 +1,4 @@
-# <a href="https://jgalsku.shinyapps.io/SOCHIABib/" target="_blank">SOCHIABib</a>
+# <a target='_blank' href="https://jgalsku.shinyapps.io/SOCHIABib/">SOCHIABib</a>
 
 Biblioteca de enlaces de publicaciones de **Antropología Biológica en Chile**: https://jgalsku.shinyapps.io/SOCHIABib/, de la Sociedad de Antropología Biológica de Chile <a href="http://www.sochiab.cl" target="_blank">SOCHIAB</a>.
 
