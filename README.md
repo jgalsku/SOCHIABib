@@ -1,7 +1,6 @@
-# href="https://jgalsku.shinyapps.io/SOCHIABib/" target="_blank">SOCHIABib</a>
+# <a href="https://jgalsku.shinyapps.io/SOCHIABib/" target="_blank">SOCHIABib</a>
 
-Biblioteca de enlaces de publicaciones de Antropología Biológica en Chile: https://jgalsku.shinyapps.io/SOCHIABib/.  
-De la Sociedad de Antropología Biológica de Chile href="http://www.sochiab.cl" target="_blank">SOCHIAB</a>.
+Biblioteca de enlaces de publicaciones de **Antropología Biológica en Chile**: https://jgalsku.shinyapps.io/SOCHIABib/, de la Sociedad de Antropología Biológica de Chile <a href="http://www.sochiab.cl" target="_blank">SOCHIAB</a>.
 
 Busca visibilizar y facilitar la búsqueda y conocimiento de las publicaciones en antropología biológica de Chile y en especial la comunidad SOCHIAB.  
 
