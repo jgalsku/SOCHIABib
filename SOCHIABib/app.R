@@ -25,26 +25,35 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
             
-            tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap_custom.css")),
+            style = "position:fixed;width:inherit;",
             
-            tags$h1(strong("SOCHIABib")),
-                     
-            tags$h4("Biblioteca de enlaces publicaciones Antropología Biológica de Chile"),
-
-            tags$br(),
+            tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap_custom.css")),
+            div(style = "margin-top:-5px"),
+            
+            tags$h1(strong("SOCHIABib"), style = "font-size:45px;"),
+            
+            tags$h4("Biblioteca de enlaces Antropología Biológica de Chile"),
+            div(style = "margin-bottom:-11px"),
+            
+            tags$hr(style = "border-top: 1px solid #000000;"),
             
             radioButtons(inputId = "radioInput", label = "¿Incluir publicaciones ajenas a Chile?     ", choices = radio_vector, selected = "Solo Chile", inline = TRUE),
                 
             sliderInput(inputId = "yearInput", label = "Año de publicación", min = min_year, max = max_year, value = c(min_year, max_year), dragRange = TRUE, sep=""),
-
+            div(style = "margin-top:-8px"),
+            
             pickerInput(inputId = "metInput", label = "Área metodológica", multiple = TRUE, choices = met_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
-
+            div(style = "margin-top:-8px"),
+            
             pickerInput(inputId = "geoInput", label = "Región natural Chile", multiple = TRUE, choices = geo_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
-
+            div(style = "margin-top:-8px"),
+            
             pickerInput(inputId = "autorInput", label = "Nombre autores", multiple = TRUE, choices = autores_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
-
+            div(style = "margin-top:-8px"),
+            
             pickerInput(inputId = "keywordInput", label = "Palabras clave", multiple = TRUE, choices = key_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
-
+            div(style = "margin-top:-8px"),
+            
             pickerInput(inputId = "pubTypeInput", label = "Tipo de Publicación", multiple = TRUE, choices = pub_type_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             
 
@@ -56,11 +65,13 @@ ui <- fluidPage(
 
             downloadButton("download", "Descargar resultados"),
 
-            tags$hr(),
-            div(span("Descarga la "),
+            tags$br(),
+            tags$br(),
+            
+            div(style="font-size:13px", span("Descarga la "),
                 a("biblioteca completa", href = "Bioantro_Chile.bib"), " para tu manejador de referencias."),
 
-            div(span("Agrega referencias "),
+            div(style="font-size:13px", span("Agrega referencias "),
                 a("aquí.", href = "https://docs.google.com/forms/d/e/1FAIpQLSdhplY5vG5KClkDnyWZpOZfVfAEWJs4V1pHquGryzLbsXgPag/viewform?usp=sf_link", target="_blank"),
                 span("Creado por "),
                 a("jgalsku ", href = "https://github.com/jgalsku/SOCHIABib", target="_blank"),
