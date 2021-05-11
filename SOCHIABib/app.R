@@ -25,7 +25,7 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
             
-            style = "position:fixed;width:inherit;",
+            # style = "position:fixed;width:inherit;",
             
             tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap_custom.css")),
             div(style = "margin-top:-5px"),
