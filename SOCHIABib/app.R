@@ -5,9 +5,11 @@ library(shinythemes)
 library(DT)
 library(shinyjs)
 
+
+
 load("biblio.Rdata")
 
-#original vectors
+#original input choice vectors
 autores_vector <- sort(unique(trimws(unlist(strsplit(biblio$autor, split=";")), which="left")))
 key_vector <- sort(unique(trimws(unlist(strsplit(biblio$key, split=";")))))
 geo_vector <- sort(unique(unlist(strsplit(biblio$geo, split=","))))
@@ -22,58 +24,90 @@ radio_vector <- c("Solo Chile", "Sí, de socies SOCHIAB")
 
 
 ui <- fluidPage(
+    tags$head(
+        # Note the wrapping of the string in HTML()
+        tags$style(HTML("
+    
+      .well {
+        background-color: #F4F5F6;
+      }
+      h2 {
+        font-family: 'Trebuchet MS';
+      }
+      h1{
+        margin-top: -10px;
+       }
+
+      "))
+    ),
     sidebarLayout(
         sidebarPanel(
             
-            # style = "position:fixed;width:inherit;",
+            # address bar icon
+            tags$head(tags$link(rel="shortcut icon", href="favicon.png")),
             
-            tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap_custom.css")),
-            div(style = "margin-top:-5px"),
-            
+            # # call css code in www folder
+            # tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap_custom.css")),
+            # div(style = "margin-top:-10px"),
+
+
+            # title set with html tags
             tags$h1(strong("SOCHIABib"), style = "font-size:45px;"),
             
-            tags$h4("Biblioteca de enlaces Antropología Biológica de Chile"),
-            div(style = "margin-bottom:-11px"),
+            # subtitle set with html tags
+            tags$h4("Biblioteca de enlaces Antropología Biológica Chile"),
+            div(style = "margin-bottom:-20px"),
             
+            #space on top border
             tags$hr(style = "border-top: 1px solid #000000;"),
             
+            # inputs/filters with reduced space in between using html 
+    
             radioButtons(inputId = "radioInput", label = "¿Incluir publicaciones ajenas a Chile?     ", choices = radio_vector, selected = "Solo Chile", inline = TRUE),
-                
-            sliderInput(inputId = "yearInput", label = "Año de publicación", min = min_year, max = max_year, value = c(min_year, max_year), dragRange = TRUE, sep=""),
-            div(style = "margin-top:-8px"),
             
-            pickerInput(inputId = "metInput", label = "Área metodológica", multiple = TRUE, choices = met_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
-            div(style = "margin-top:-8px"),
+            # setSliderColor("#FFD54F", 1),
+            
+            sliderInput(inputId = "yearInput", label = "Año de publicación", min = min_year, max = max_year, value = c(min_year, max_year), dragRange = TRUE, sep=""),
+            div(style = "margin-top:-10px"),
+            
+            pickerInput(inputId = "metInput", label = "Área temático-metodológica", multiple = TRUE, choices = met_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
+            div(style = "margin-top:-10px"),
             
             pickerInput(inputId = "geoInput", label = "Región natural Chile", multiple = TRUE, choices = geo_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
-            div(style = "margin-top:-8px"),
+            div(style = "margin-top:-10px"),
             
             pickerInput(inputId = "autorInput", label = "Nombre autores", multiple = TRUE, choices = autores_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
-            div(style = "margin-top:-8px"),
+            div(style = "margin-top:-10px"),
             
             pickerInput(inputId = "keywordInput", label = "Palabras clave", multiple = TRUE, choices = key_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
-            div(style = "margin-top:-8px"),
+            div(style = "margin-top:-10px"),
             
             pickerInput(inputId = "pubTypeInput", label = "Tipo de Publicación", multiple = TRUE, choices = pub_type_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             
 
            
-
+            #search button
             actionButton(inputId = "buscarInput", label = "Buscar"),
 
-            actionButton("refresh", "Limpiar búsqueda"),
-
+            # reload session button (too slow)
+            # actionButton("refresh", "Limpiar búsqueda"),
+            
+            # reset inputs button
+            actionButton("reset_input", "Limpiar filtros"),
+            
+            # download search results button
             downloadButton("download", "Descargar resultados"),
 
             tags$br(),
             tags$br(),
             
+            # bottom links
             div(style="font-size:13px", span("Descarga la "),
                 a("biblioteca completa", href = "Bioantro_Chile.bib"), " para tu manejador de referencias."),
 
             div(style="font-size:13px", span("Agrega referencias "),
                 a("aquí.", href = "https://docs.google.com/forms/d/e/1FAIpQLSdhplY5vG5KClkDnyWZpOZfVfAEWJs4V1pHquGryzLbsXgPag/viewform?usp=sf_link", target="_blank"),
-                span("Creado por "),
+                span("Escrito por "),
                 a("jgalsku ", href = "https://github.com/jgalsku/SOCHIABib", target="_blank"),
                 span("para "),
                 a("SOCHIAB.", href = "http://www.sochiab.cl", target="_blank")),
@@ -85,8 +119,8 @@ ui <- fluidPage(
 
         mainPanel(
             
-            setBackgroundImage(src = 'logo4.png', shinydashboard = FALSE),
-            DT::dataTableOutput(outputId = "tableOutput")
+            setBackgroundImage(src = 'logo5.png', shinydashboard = FALSE),
+            DT::dataTableOutput(outputId = "tableOutput", height = "100%")
         )
     )
 )
@@ -100,17 +134,19 @@ server <- function(input, output, session) {
 
     observeEvent(input$radioInput, {
         
+        #filter out all that is not Chile when "solo chile" selected (default)
         if(input$radioInput == "Solo Chile") {
             
             biblio <- biblio %>%
                 filter(geo != "Fuera de Chile")
         }
         
-    ### all observant on year
+    # filter input options displayed    
+        
+    ### inputs all observant on year
     
     ##dep on year
-    
-    
+        
     observeEvent(input$yearInput, {
         biblio <- biblio %>%
             filter(pub_year >= input$yearInput[1] & pub_year <= input$yearInput[2]) %>% 
@@ -304,6 +340,7 @@ server <- function(input, output, session) {
                 filter(geo != "Fuera de Chile")
         }
 
+        # filter search results depending on inputs 
         
         data <- biblio %>% 
             filter(pub_year >= input$yearInput[1] & pub_year <= input$yearInput[2]) %>%
@@ -311,17 +348,59 @@ server <- function(input, output, session) {
             filter(grepl(paste(input$geoInput, collapse = "|"), geo)) %>%
             filter(grepl(paste(input$autorInput, collapse = "|"), autor)) %>%
             filter(grepl(paste(input$keywordInput, collapse = "|"), key)) %>%
-            filter(grepl(paste(input$pubTypeInput, collapse = "|"), pub_type))
+            filter(grepl(paste(input$pubTypeInput, collapse = "|"), pub_type)) 
+            # mutate(autor = case_when(nchar(autor) >= 150 ~ paste(substring(autor, 1, 150), "...", sep = ""), 
+            # TRUE ~ as.character(autor))) # cut author names to 150 characters, better aesthetically but not content-wise, find better solution
+            
     })
     
     
+    #reload session (was too slow)
+    # observeEvent(input$refresh, {
+    #     session$reload();
+    # })
+    # 
     
-    observeEvent(input$refresh, {
-        session$reload();
+    # reset inputs
+    observeEvent(input$reset_input, {
+        
+        # filter options displayed after reseting input 
+        
+        if(input$radioInput == "Solo Chile") {
+            
+            biblio <- biblio %>%
+                filter(geo != "Fuera de Chile")
+        }
+        
+        #chile
+        updateRadioButtons(session, "radioInput", selected = "Solo Chile")
+        
+        #year
+        updateSliderInput(session, "yearInput", value = c(min_year, max_year))
+        
+        # met
+        updatePickerInput(session = session, inputId = "metInput",
+                          choices = sort(unique(unlist(strsplit(biblio$met, split=",")))))
+        # geo
+        updatePickerInput(session = session, inputId = "geoInput",
+                          choices = sort(unique(unlist(strsplit(biblio$geo, split=",")))))
+        # autor
+        updatePickerInput(session = session, inputId = "autorInput",
+                          choices = sort(unique(trimws(unlist(strsplit(biblio$autor, split=";")), which="left"))))
+        # key
+        updatePickerInput(session = session, inputId = "keywordInput",
+                          choices = sort(unique(trimws(unlist(strsplit(biblio$key, split=";"))))))
+        # pub_type
+        updatePickerInput(session = session, inputId = "pubTypeInput",
+                          choices = sort(unique(unlist(biblio$pub_type))))
+        
+
     })
-    
+            
+
     
     # print table with database info queried above
+    
     output$tableOutput <- DT::renderDataTable({
         dataInput()
     },
@@ -331,11 +410,16 @@ server <- function(input, output, session) {
                "DOI", "Pages", "Issue", "Volume", "Conference.Name", "Publisher", 
                "Editor", "Place", "geo", "met", "key", "abstract"),
     options = list(
-        autoWidth = FALSE,
-        columnDefs = list(list(targets = c(6:18),visible=FALSE))
+        columnDefs = list(list(targets = c(6:18),visible=FALSE)),
+        scrollResize = T,
+        scrollY = 580,
+        scrollCollapse = T,
+        paging = F
     ))
     
+    # fillcontainer = T, paging = F
     
+    # download search results in csv format, modify some columns before creating csv
     
     output$download <- downloadHandler(
         filename = function() {

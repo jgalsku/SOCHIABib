@@ -62,11 +62,11 @@ dput(levels(as.factor(biblio$pub_type)))
 #rename levels of pub_type one by one
 biblio <-
   biblio %>%
-  mutate_at("pub_type", str_replace, "bookSection", "Capítulo") %>% 
-  mutate_at("pub_type", str_replace, "conferencePaper", "Presentación") %>% 
+  mutate_at("pub_type", str_replace, "bookSection", "Capítulo de libro") %>% 
+  mutate_at("pub_type", str_replace, "conferencePaper", "Presentación oral/panel") %>% 
   mutate_at("pub_type", str_replace, "journalArticle", "Artículo") %>% 
   mutate_at("pub_type", str_replace, "manuscript", "Manuscrito") %>% 
-  mutate_at("pub_type", str_replace, "thesis", "Tesis") %>% 
+  mutate_at("pub_type", str_replace, "thesis", "Tesis/Memoria") %>% 
   mutate_at("pub_type", str_replace, "book", "Libro") %>% 
   mutate_at("pub_type", str_replace, "report", "Informe")
 
