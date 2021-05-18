@@ -19,40 +19,50 @@ pub_type_vector <- sort(unique(unlist(biblio$pub_type)))
 min_year <- round(min(biblio$pub_year),0)
 max_year <- round(max(biblio$pub_year),0)
 
-radio_vector <- c("Solo Chile", "Sí, de socies SOCHIAB")
+radio_vector <- c("Solo Chile", "Sí, de autores comunidad SOCHIAB")
 
 
 
 ui <- fluidPage(
+  
     tags$head(
         # Note the wrapping of the string in HTML()
         tags$style(HTML("
     
       .well {
-        background-color: #F4F5F6;
+        background-color: #F1F3F5;
       }
-      h2 {
+      * {
         font-family: 'Trebuchet MS';
       }
-      h1{
-        margin-top: -10px;
-       }
 
       "))
     ),
+    
     sidebarLayout(
         sidebarPanel(
-            
-            # address bar icon
+            titlePanel(windowTitle ="SOCHIABib", 
+                       h1(strong("SOCHIABib"), 
+                            style='margin-top: -30px;
+                                   font-size:45px')),
+        
+        
+
+            # address bar icon (favicon)
             tags$head(tags$link(rel="shortcut icon", href="favicon.png")),
-            
-            # # call css code in www folder
-            # tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap_custom.css")),
-            # div(style = "margin-top:-10px"),
 
+            #attempt to add favicons of all sizes, does not work
+            # tags$head(
+            #           tags$link(rel="apple-touch-icon", sizes="180x180", href="apple-touch-icon.png"),
+            #           tags$link(rel="icon", type="image/png", sizes="32x32", href="favicon-32x32.png"),
+            #           tags$link(rel="icon", type="image/png", sizes="16x16", href="favicon-16x16.png"),
+            #           tags$link(rel="manifest", href="site.webmanifest"),
+            #           tags$link(rel="mask-icon", href="safari-pinned-tab.svg", color="#5bbad5"),
+            #           tags$link(rel="mask-icon", href="safari-pinned-tab.svg", color="#5bbad5"),
+            #           tags$meta(name="msapplication-TileColor", content="#00aba9"),
+            #           tags$meta(name="theme-color", content="#ffffff")
+            #           ),
 
-            # title set with html tags
-            tags$h1(strong("SOCHIABib"), style = "font-size:45px;"),
             
             # subtitle set with html tags
             tags$h4("Biblioteca de enlaces Antropología Biológica Chile"),
@@ -70,19 +80,24 @@ ui <- fluidPage(
             sliderInput(inputId = "yearInput", label = "Año de publicación", min = min_year, max = max_year, value = c(min_year, max_year), dragRange = TRUE, sep=""),
             div(style = "margin-top:-10px"),
             
-            pickerInput(inputId = "metInput", label = "Área temático-metodológica", multiple = TRUE, choices = met_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
+            pickerInput(inputId = "metInput", label = "Área temático-metodológica", multiple = TRUE, choices = met_vector, 
+                        options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             div(style = "margin-top:-10px"),
             
-            pickerInput(inputId = "geoInput", label = "Región natural Chile", multiple = TRUE, choices = geo_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
+            pickerInput(inputId = "geoInput", label = "Región natural Chile", multiple = TRUE, choices = geo_vector, 
+                        options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             div(style = "margin-top:-10px"),
             
-            pickerInput(inputId = "autorInput", label = "Nombre autores", multiple = TRUE, choices = autores_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
+            pickerInput(inputId = "autorInput", label = "Nombre autores", multiple = TRUE, choices = autores_vector, 
+                        options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, liveSearchNormalize = TRUE, noneSelectedText = "All selected")),
             div(style = "margin-top:-10px"),
             
-            pickerInput(inputId = "keywordInput", label = "Palabras clave", multiple = TRUE, choices = key_vector, options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, noneSelectedText = "All selected")),
+            pickerInput(inputId = "keywordInput", label = "Palabras clave", multiple = TRUE, choices = key_vector, 
+                        options = pickerOptions(`actions-box` = TRUE, `live-search`=TRUE, liveSearchNormalize = TRUE, noneSelectedText = "All selected")),
             div(style = "margin-top:-10px"),
             
-            pickerInput(inputId = "pubTypeInput", label = "Tipo de Publicación", multiple = TRUE, choices = pub_type_vector, options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
+            pickerInput(inputId = "pubTypeInput", label = "Tipo de Publicación", multiple = TRUE, choices = pub_type_vector, 
+                        options = pickerOptions(`actions-box` = TRUE, noneSelectedText = "All selected")),
             
 
            
@@ -119,7 +134,7 @@ ui <- fluidPage(
 
         mainPanel(
             
-            setBackgroundImage(src = 'logo5.png', shinydashboard = FALSE),
+            setBackgroundImage(src = 'logo.png', shinydashboard = FALSE),
             DT::dataTableOutput(outputId = "tableOutput", height = "100%")
         )
     )
@@ -406,7 +421,7 @@ server <- function(input, output, session) {
     },
     
     escape = FALSE,
-    colnames=c("Autor/a/es", "Año publicación", "Título", "Publicación", "Enlace", "pub_type", 
+    colnames=c("Autor/a/es", "Año", "Título", "Publicación", "Enlace", "pub_type", 
                "DOI", "Pages", "Issue", "Volume", "Conference.Name", "Publisher", 
                "Editor", "Place", "geo", "met", "key", "abstract"),
     options = list(
