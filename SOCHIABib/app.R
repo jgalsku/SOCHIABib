@@ -122,10 +122,10 @@ ui <- fluidPage(
 
             div(style="font-size:13px", span("Agrega referencias "),
                 a("aquí.", href = "https://docs.google.com/forms/d/e/1FAIpQLSdhplY5vG5KClkDnyWZpOZfVfAEWJs4V1pHquGryzLbsXgPag/viewform?usp=sf_link", target="_blank"),
-                span("Escrito por "),
+                span("Creado por "),
                 a("jgalsku ", href = "https://github.com/jgalsku/SOCHIABib", target="_blank"),
                 span("para "),
-                a("SOCHIAB.", href = "http://www.sochiab.cl", target="_blank")),
+                a("SOCHIAB.", href = "https://www.sochiab.cl/sochiabib/", target="_blank")),
 
 
 
