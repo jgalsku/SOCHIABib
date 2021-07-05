@@ -5,8 +5,8 @@ account: jgalsku
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3882851
-bundleId: 4666979
+bundleId: 4734759
 url: https://jgalsku.shinyapps.io/SOCHIABib/
-when: 1622603775.07127
+when: 1624139179.95441
 asMultiple: FALSE
 asStatic: FALSE
