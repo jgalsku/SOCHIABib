@@ -1,0 +1,196 @@
+## original code for co-author network from: https://datalab.ucdavis.edu/2019/08/27/creating-co-author-networks-in-r/
+## link to Sochiabib app: https://jgalsku.shinyapps.io/SOCHIABib/ 
+
+library(networkDynamic)
+library(ndtv)
+library(igraph)
+library(statnet)
+library(intergraph)
+library(visNetwork)
+
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(RColorBrewer)
+
+load("C:/Users/yo/Dropbox/shiny/SOCHIABib/SOCHIABib/biblio.Rdata")
+
+
+#remove html tags 
+biblio$Url <- gsub("<a href='", "", biblio$Url)
+biblio$Url <- gsub("' target='_blank'>URL</a>", "", biblio$Url)
+biblio$pub_title <- gsub("<b>", "", biblio$pub_title)
+biblio$pub_title <- gsub("</b>", "", biblio$pub_title)
+
+
+######################################################################################3
+# network
+#######################################################################################
+
+# table(biblio$pub_type)
+# pubs_dejar <- c("Artículo", "Capítulo de libro", "Libro", "Tesis/Memoria")
+# biblio <- biblio %>% filter(pub_type %in% pubs_dejar)
+
+# table(biblio$pub_type)
+
+
+
+## código original datalabUCdavis
+
+# generate list of authors in data
+biblio.coauthors = sapply(as.character(biblio$autor), strsplit, "; ")
+biblio.coauthors = lapply(biblio.coauthors, trimws)
+biblio.coauthors.unique = unique(unlist(biblio.coauthors))[order(unique(unlist(biblio.coauthors)))]
+
+# create matrix with associations between co-authors
+biblio.bipartite.edges = lapply(biblio.coauthors, function(x) {biblio.coauthors.unique %in% x})
+biblio.bipartite.edges = do.call("cbind", biblio.bipartite.edges) # dimension is number of authors x number of papers
+rownames(biblio.bipartite.edges) = biblio.coauthors.unique
+
+biblio.mat = biblio.bipartite.edges %*% t(biblio.bipartite.edges) #bipartite to unimode
+
+
+
+## código agregado JG ##
+
+# identificar autores que están SOLO presentes en publicaciones de más de X autores
+autNumPerPub <- as.data.frame(biblio.bipartite.edges)
+autPubList <- colnames(autNumPerPub)
+numberAutPerPub <- str_count(autPubList, ";") +1
+numberAutPerPub
+colnames(autNumPerPub) <- numberAutPerPub
+
+# X = 6 
+mas5 <- numberAutPerPub > 6
+mas5
+autPubsMasX <- autNumPerPub[,mas5]
+autPubsMasX$sum_true <- rowSums(autNumPerPub == "TRUE")
+autPubsMasX$sum_true
+autPubsMasX <- autPubsMasX["sum_true"]
+autPubsMasX <- autPubsMasX %>% filter(sum_true > 0)
+
+menos5 <- numberAutPerPub <= 6
+menos5
+autPubsMenosX <- autNumPerPub[,menos5]
+autPubsMenosX$sum_true <- rowSums(autPubsMenosX == "TRUE")
+autPubsMenosX$sum_true
+autPubsMenosX <- autPubsMenosX["sum_true"]
+autPubsMenosX <- autPubsMenosX %>% filter(sum_true > 0)
+
+autPubsMasX_vect <- rownames(autPubsMasX)
+autPubsMenosX_vect <- rownames(autPubsMenosX)
+
+# lista de co-autores presentes en pubs con ambos menos y más de X autores
+autAmbosMenosMasX <- intersect(autPubsMasX_vect, autPubsMenosX_vect)
+
+
+# para contar cual es el autor con más publicaciones
+autNpubs <- as.data.frame(biblio.bipartite.edges)
+colnames(autNpubs) <- 1:(length(autNpubs))
+autNpubs$sum_true <- rowSums(autNpubs == "TRUE")
+autNpubs$sum_true
+autNpubs <- autNpubs["sum_true"]
+
+# para obtener los 15 con más publicaciones
+autNpubs2 <- autNpubs2 %>% arrange(desc(sum_true))
+dput(head(rownames(autNpubs2), 15))
+
+
+# DEJAR la lista de autores seleccionados "autAmbosMenosMasX" de la matriz
+# para eso hay que seleccionar ambos las columnas y las filas con el nombre del coautor
+biblio.mat <- as.data.frame(biblio.mat)
+biblio.mat <- biblio.mat[(row.names(biblio.mat) %in% autAmbosMenosMasX), ]
+biblio.mat <- biblio.mat[ , which(names(biblio.mat) %in% autAmbosMenosMasX)]
+biblio.mat <- as.matrix(biblio.mat) # return to matrix
+
+
+
+## código original datalabUCdavis ##
+
+mat = biblio.mat[order(rownames(biblio.mat)), order(rownames(biblio.mat))]
+
+biblio.statnet = as.network(biblio.mat, directed = FALSE, names.eval = "edge.lwd", ignore.eval = FALSE)
+biblio.statnet # view network summary
+
+# plot.network(biblio.statnet, edge.col = "gray", edge.lwd = "edge.lwd", label = "vertex.names", label.cex = .5, label.pad = 0, label.pos = 1)
+
+
+
+## código agregado JG ##
+
+# DEJAR solo autores seleccionados (autAmbosMenosMasX) en lista que definirá tamaño de nodos
+autNpubs_clean <- autNpubs[(row.names(autNpubs) %in% autAmbosMenosMasX), ]
+head(autNpubs_clean)
+
+
+## código original datalabUCdavis ##
+
+biblio.statnet%v%"size" = log(autNpubs_clean) + .5 #
+
+# plot.network(biblio.statnet, edge.col = "gray", edge.lwd = "edge.lwd", label = "vertex.names", label.cex = .5, label.pad = 0, label.pos = 1, vertex.cex = "size")
+
+
+# lista autores excluidos del network
+autores_eliminados <- setdiff(biblio.coauthors.unique, autAmbosMenosMasX)
+autores_eliminados <- as.data.frame(autores_eliminados)
+
+# pdf(file="C:/Users/yo/Dropbox/sochiab/biblio/network.pdf")
+# 
+# plot.network(biblio.statnet, edge.col = "gray", edge.lwd = "edge.lwd", label = "vertex.names", label.cex = .5, label.pad = 0, label.pos = 1, vertex.cex = "size")
+# dev.off()
+
+
+###############################################################################
+# para hacer el network interactivo
+##############################################################################
+
+## código original datalabUCdavis ##
+
+# interactive using visNetwork package
+# The most basic way to create a plot using this package is to first build data frames describing the nodes and edges in the graph.
+
+biblio.nodes <- data.frame(id = 1:length(biblio.statnet%v%"vertex.names"),
+                           label = biblio.statnet%v%"vertex.names",
+                           title = biblio.statnet%v%"vertex.names",
+                           size = 5*(2+biblio.statnet%v%"size"))
+
+biblio.edges <- data.frame(from=data.frame(as.edgelist(biblio.statnet))$X1, 
+                           to=data.frame(as.edgelist(biblio.statnet))$X2)
+
+
+# create interactive network
+footer_text <- '*Por motivos gráficos se excluyeron los autores presentes únicamente en publicaciones de más de 6 autores. 
+Network creado por <a target="_blank" href="https://github.com/jgalsku/SOCHIABib">jgalsku</a> basado en el código de <a target="_blank" href="https://datalab.ucdavis.edu/2019/08/27/creating-co-author-networks-in-r/">datalab.ucdavis</a>.' 
+
+biblio_interactive = visNetwork(biblio.nodes, biblio.edges, 
+                                main = list(text = "redSOCHIABib: network de Co-autores* en Antropología Biológica Chilena", 
+                                            style = "font-family:Trebuchet MS;font-weight:bold;font-size:20px;text-align:center;"),
+                                submain = list(text = 'Red preliminar basada en publicaciones recopiladas por <a target="_blank" href="https://jgalsku.shinyapps.io/SOCHIABib/">SOCHIABib</a>. 
+                                               Ayuda a mejorar este network agregando publicaciones <a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdhplY5vG5KClkDnyWZpOZfVfAEWJs4V1pHquGryzLbsXgPag/viewform?usp=sf_link">aquí!</a> ', 
+                                               style = "font-family:Trebuchet MS;font-size:15px;text-align:center;"),
+                                footer = list(text = footer_text,
+                                              style = "font-family:Trebuchet MS;font-size:15px;text-align:center;"),
+                                width = "90%", height = 500
+                                # background = "black",
+                                ) %>% 
+  visIgraphLayout(layout = "layout_nicely", type = "full")
+
+
+# customize how nodes and edges appear. For example, the following code highlights nodes red when clicked, and thickens highlighted 
+# edges in blue. When a node is selected, it’s connected edges are highlighted. 
+biblio_interactive = biblio_interactive  %>%
+  visNodes(color = list(background = "white", highlight = "red", hover = list(border = "red"))) %>%
+  visEdges(selectionWidth = 10, color = list(highlight = "#2B7CE9")) 
+
+
+# add a dropdown menu that allows us to select an author to highlight from a list. 
+biblio_interactive = biblio_interactive  %>%  
+  visOptions(nodesIdSelection = list(enabled  = TRUE, useLabels = TRUE, main = "Buscar por Nombre"))
+
+biblio_interactive #view network
+
+
+# save html
+# visSave(biblio_interactive, "C:/Users/yo/Dropbox/sochiab/boletín/sochiabib_anal/biblio_coauthor_network_soloMas6.html", selfcontained = T)
+
+
