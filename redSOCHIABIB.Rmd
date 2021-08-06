@@ -1,3 +1,10 @@
+---
+output: html_document
+---
+
+
+
+```{r, echo=F, message=F, error=F, results=F, warning=F}
 ## original code for co-author network from: https://datalab.ucdavis.edu/2019/08/27/creating-co-author-networks-in-r/
 ## link to Sochiabib app: https://jgalsku.shinyapps.io/SOCHIABib/ 
 
@@ -56,22 +63,22 @@ biblio.mat = biblio.bipartite.edges %*% t(biblio.bipartite.edges) #bipartite to 
 # identificar autores que están SOLO presentes en publicaciones de más de X autores
 autNumPerPub <- as.data.frame(biblio.bipartite.edges)
 autPubList <- colnames(autNumPerPub)
-numberAutPerPub <- str_count(autPubList, ";") +1
+numberAutPerPub <- str_count(autPubList, ";") + 1
 numberAutPerPub
 colnames(autNumPerPub) <- numberAutPerPub
 
 # X = 6 
-mas5 <- numberAutPerPub > 6
-mas5
-autPubsMasX <- autNumPerPub[,mas5]
+masX <- numberAutPerPub > 6
+masX
+autPubsMasX <- autNumPerPub[,masX]
 autPubsMasX$sum_true <- rowSums(autNumPerPub == "TRUE")
 autPubsMasX$sum_true
 autPubsMasX <- autPubsMasX["sum_true"]
 autPubsMasX <- autPubsMasX %>% filter(sum_true > 0)
 
-menos5 <- numberAutPerPub <= 6
-menos5
-autPubsMenosX <- autNumPerPub[,menos5]
+menosIgualX <- numberAutPerPub <= 6
+menosIgualX
+autPubsMenosX <- autNumPerPub[,menosIgualX]
 autPubsMenosX$sum_true <- rowSums(autPubsMenosX == "TRUE")
 autPubsMenosX$sum_true
 autPubsMenosX <- autPubsMenosX["sum_true"]
@@ -92,7 +99,7 @@ autNpubs$sum_true
 autNpubs <- autNpubs["sum_true"]
 
 # para obtener los 15 con más publicaciones
-autNpubs2 <- autNpubs2 %>% arrange(desc(sum_true))
+autNpubs2 <- autNpubs %>% arrange(desc(sum_true))
 dput(head(rownames(autNpubs2), 15))
 
 
@@ -187,10 +194,16 @@ biblio_interactive = biblio_interactive  %>%
 biblio_interactive = biblio_interactive  %>%  
   visOptions(nodesIdSelection = list(enabled  = TRUE, useLabels = TRUE, main = "Buscar por Nombre"))
 
-biblio_interactive #view network
 
 
 # save html
 # visSave(biblio_interactive, "C:/Users/yo/Dropbox/sochiab/boletín/sochiabib_anal/biblio_coauthor_network_soloMas6.html", selfcontained = T)
+
+
+```
+
+```{r, echo=F, out.width = '100%'}
+biblio_interactive #view network
+```
 
 
