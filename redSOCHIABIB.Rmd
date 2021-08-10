@@ -90,7 +90,6 @@ autPubsMenosX_vect <- rownames(autPubsMenosX)
 # lista de co-autores presentes en pubs con ambos menos y más de X autores
 autAmbosMenosMasX <- intersect(autPubsMasX_vect, autPubsMenosX_vect)
 
-
 # para contar cual es el autor con más publicaciones
 autNpubs <- as.data.frame(biblio.bipartite.edges)
 colnames(autNpubs) <- 1:(length(autNpubs))
