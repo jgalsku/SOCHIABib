@@ -8,16 +8,16 @@ La biblioteca aspira incluir la mayor cantidad y diversidad de publicaciones en 
 
 Esta iniciativa es comunitaria y contamos con su ayuda para hacerla crecer. Les agradecemos que nos envíen las referencias de sus trabajos para sumarlos a la biblioteca mediante <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhplY5vG5KClkDnyWZpOZfVfAEWJs4V1pHquGryzLbsXgPag/viewform" target="_blank">este formulario</a> o enviando un correo a sochiabib@antropologiabiologica.cl.
 
-Agradecimientos a quienes han aportado a la biblioteca:
+Agradecimientos a quienes han aportado a la biblioteca (búsqueda activa de papers ajenos destacada, **gracias!!**):
 
 - Alejandro Clarot
 - Andrea P. Eyquem
 - Constanza de la Fuente
 - Constanza Pino
 - Cristobal Palacios
-- Javiera Ruminot
+- **Javiera Ruminot**
 - Margarita Reyes-Madrid
-- María José Rubio Ulloa
+- **María José Rubio Ulloa**
 - Nicolás Montalva
 - Pedro Andrade
 - Rodrigo Retamal
@@ -25,4 +25,5 @@ Agradecimientos a quienes han aportado a la biblioteca:
 - Tamara Pardo
 - Verónica Silva-Pinto
 
+Muchas gracias!
 
