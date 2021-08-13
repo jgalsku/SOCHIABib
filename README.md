@@ -27,8 +27,8 @@ A quienes han aportado a la biblioteca:
 
 En particular a quienes han realizado búsqueda activa de papers ajenos:  
 
-- María José Rubio Ulloa
 - Javiera Ruminot
+- María José Rubio Ulloa
 
 Muchas gracias!
 
