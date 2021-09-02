@@ -14,6 +14,7 @@ A quienes han aportado a la biblioteca:
 
 - Alejandro Clarot
 - Andrea P. Eyquem
+- Camila Fournier
 - Constanza de la Fuente
 - Constanza Pino
 - Cristobal Palacios
@@ -25,7 +26,7 @@ A quienes han aportado a la biblioteca:
 - Tamara Pardo
 - Verónica Silva-Pinto
 
-En particular a quienes han realizado búsqueda activa de papers ajenos:  
+En particular a quienes han realizado búsqueda activa de publicaciones ajenas:  
 
 - Javiera Ruminot
 - María José Rubio Ulloa
