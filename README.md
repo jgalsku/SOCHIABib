@@ -26,7 +26,7 @@ A quienes han aportado a la biblioteca:
 - Tamara Pardo
 - Verónica Silva-Pinto
 
-En particular a quienes han realizado búsqueda activa de publicaciones ajenas:  
+En particular a quienes han realizado búsqueda activa de publicaciones ajenas para la biblioteca:  
 
 - Javiera Ruminot
 - María José Rubio Ulloa
