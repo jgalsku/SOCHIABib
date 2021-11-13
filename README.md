@@ -12,6 +12,7 @@ Esta iniciativa es comunitaria y contamos con su ayuda para hacerla crecer. Les 
 
 A quienes han aportado a la biblioteca:
 
+- Sebastián Aguayo
 - Alejandro Clarot
 - Andrea P. Eyquem
 - Camila Fournier
@@ -31,5 +32,5 @@ En particular a quienes han realizado búsqueda activa de publicaciones ajenas p
 - Javiera Ruminot
 - María José Rubio Ulloa
 
-Muchas gracias!
+¡Muchas gracias!
 

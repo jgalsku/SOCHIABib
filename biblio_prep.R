@@ -71,6 +71,12 @@ biblio <-
   mutate_at("pub_type", str_replace, "report", "Informe") %>%
   mutate_at("pub_type", str_replace, "film", "Audiovisual")
 
+
+biblio <-
+  biblio %>%
+  mutate_at("met", str_replace, "Morfometría", "Antropometría")
+  
+
 #eliminate blank space left author list & order alphabetic
 biblio$autor <- trimws(biblio$autor, which= c("left"))
 biblio <- biblio[order(biblio$autor),]
